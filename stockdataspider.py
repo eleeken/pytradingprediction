@@ -6,12 +6,12 @@ import os
 from pandas_datareader import data
 import datetime
 
-class StockDataSpider:
+class stockdataspider:
     def __init__(self):
         self.STOCKLIST_URL = "http://quote.eastmoney.com/stocklist.html"
         self.YAHOODATA_URL = 'https://query1.finance.yahoo.com/v7/finance/download/{0}?period1=-252403200&period2=1510848000&interval=1d&events=history&crumb=i4KfR8A.S5F'
 
-    def getListPage(self):
+    def getlistpage(self):
         '''
         读取证券列表网页
         :return: 网页内容
@@ -40,12 +40,12 @@ class StockDataSpider:
         finally:
             pass
 
-    def getSaveList(self):
+    def parse_and_savelist(self):
         '''
         分析并保存证券列表到文本文件
         :return:
         '''
-        e,content = self.getListPage()
+        e,content = self.getlistpage()
         pattern = re.compile(r'<li>.*?<a.*?target=.*?html">(.*?)\((.*?)\).*?</a></li>', re.S)
         items = re.findall(pattern, content)
 
@@ -56,7 +56,7 @@ class StockDataSpider:
                 f.write(item[1] + ',' + item[0] + '\n')
         f.close()
 
-    def fetchDayDataFromYahoo(self):
+    def fetch_daytrandata_fromYahoo(self):
         '''
 
         :param code: 证券代码
@@ -85,6 +85,6 @@ class StockDataSpider:
             time.sleep(1)
 
 if __name__ == '__main__':
-    spider = StockDataSpider()
-    spider.getSaveList()
-    spider.fetchDayDataFromYahoo()
+    spider = stockdataspider()
+    spider.parse_and_savelist()
+    spider.fetch_daytrandata_fromYahoo()

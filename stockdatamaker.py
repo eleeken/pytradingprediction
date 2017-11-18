@@ -12,11 +12,11 @@ import pandas as pd
 from tensorflow.python.framework import dtypes
 
 
-class StockDataMaker:
+class stockdatamaker:
     """
     生成证券分析用的数据
     """
-    COLUMNS = ["Date", "Open", "High", "Low", "Close", "Volume", "Adj Close"]
+    COLUMNS = ["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]
     LABEL = "Pred"
 
     # 每行数据的交易天数
@@ -48,7 +48,7 @@ class StockDataMaker:
 
         close1 = float(csvset.loc[r]['Close'])
         close2 = float(csvset.loc[r + self.CHECKDATES_PER_PERIOD]['Close'])
-        closegained = (close1 - close2) / close2
+        closegained = (close2 - close1) / close1
 
         label = ""
         if closegained > 0.02:
@@ -141,7 +141,7 @@ class StockDataMaker:
 
 
 if __name__ == '__main__':
-    maker = StockDataMaker()
+    maker = stockdatamaker()
     (train, labels) = maker.full_read_dataset("data")
 
     print(len(maker.label_set))
