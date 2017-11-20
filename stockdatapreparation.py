@@ -21,33 +21,33 @@ class stockdatapreparation:
     # 使用N天后的收盘价作为LABEL的数据
     LABELDAYS_AHEAD = 3
 
+    DATADIR = 'data'
+    TRAINDIR = 'train'
+
 
     def __init__(self):
         pass
 
-    def prepare_csvfile(self, fn):
+    def prepare_trainning_file(self, datadir, fn):
         '''
         读取CSV历史行情文件，转化为训练测试数据
         :param fn:文件名
         :return:
         '''
-        df = pd.read_csv(fn, skipinitialspace=True, skiprows=1, names=self.COLUMNS)
+        df = pd.read_csv(datadir + '\\' + fn, skipinitialspace=True, skiprows=1, names=self.COLUMNS)
         df = df.dropna(axis=0, how='any')
         df = df[(df['Adj Close'] != 0.0) & (df['Close'] != 0.0) & (df['Volume'] != 0)]
         df = df.reset_index(drop = True)
-        df['Lable'] = 0.0
+        df['Label'] = 0.0
 
         for i in range(len(df) - self.LABELDAYS_AHEAD):
-            df.iloc[i]['Label'] = df.iloc[i + self.LABELDAYS_AHEAD]['Close']
+            df.loc[i, 'Label'] = df.loc[i + self.LABELDAYS_AHEAD, 'Close']
 
         for i in range(len(df) - self.LABELDAYS_AHEAD, len(df)):
             df.drop(i)
+        df.to_csv(self.TRAINDIR + '\\' + fn, index=False, sep=',')
 
-
-
-
-
-    def prepare(self, datadir):
+    def prepare(self):
         """读取数据集
 
         Args:
@@ -55,10 +55,18 @@ class stockdatapreparation:
         Returns:
             数据集
         """
-        for fn in os.listdir(datadir):
+
+        if not os.path.exists(self.TRAINDIR):
+            os.mkdir(self.TRAINDIR)
+
+        for fn in os.listdir(self.DATADIR):
             print(">{}".format(fn))
-            self.prepare_csvfile(datadir + "\\" + fn)
+            try:
+                self.prepare_trainning_file(self.DATADIR, fn)
+            except Exception as e:
+                print('error!')
 
 if __name__ == '__main__':
     dataprepare = stockdatapreparation()
-    dataprepare.prepare("data")
+    dataprepare.prepare()
+    print('All finished!')

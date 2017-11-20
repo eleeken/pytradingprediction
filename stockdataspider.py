@@ -62,22 +62,31 @@ class stockdataspider:
         :param code: 证券代码
         :return: 无
         '''
-        start = datetime.datetime(2010, 1, 1)
+        start = datetime.datetime(1999, 1, 1)
         end = datetime.datetime(2017, 11, 16)
 
         file = open("stocklist.txt", "r")
-        for line in file:
+        stockcodes = [line for line in file]
+        stockcodes.insert(0, '000001.ss')
+        stockcodes.insert(0, '399006.sz')
+        for line in stockcodes:
             items = line.split(',')
             print("%s fetching...\n" % items[0])
             try:
                 if not os.path.isfile('data/' + items[0] + '.csv'):
-                    code = items[0].startswith('0') and items[0] + '.sz' or items[0] + '.ss'
+                    if (('.ss' not in line) & ('.sz' not in line)):
+                        code = items[0].startswith('0') and items[0] + '.sz' or items[0] + '.ss'
+                    else:
+                        code = items[0]
+
                     sheet = data.DataReader(code, 'yahoo', start, end)
                     sheet.to_csv('data/' + items[0] + '.csv')
                     print('%s file was fetched.\n' % code)
 
                 else:
                     print('exists.')
+            except ConnectionError as e:
+                print('Conneciton error!')
             except Exception as e:
                 print('RemoteDataError!')
                 pass
