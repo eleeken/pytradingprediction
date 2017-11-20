@@ -94,6 +94,9 @@ class stockdataspider:
             time.sleep(1)
 
 if __name__ == '__main__':
+    if not os.path.exists('data'):
+        os.mkdir('data')
+
     spider = stockdataspider()
     spider.parse_and_savelist()
     spider.fetch_daytrandata_fromYahoo()

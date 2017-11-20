@@ -186,7 +186,7 @@ class stockpredictlstm:
             plt.show()
 
 if __name__ == '__main__':
-    predict = stockpredictlstm('train\\600004.csv')
+    predict = stockpredictlstm('train\\600118.csv')
     print(predict.datalen)
     predict.train_lstm(batch_size=60, time_step=20, train_begin=0, train_end=predict.datalen - 500)
     predict.prediction(time_step=20, test_begin=predict.datalen - 500)
