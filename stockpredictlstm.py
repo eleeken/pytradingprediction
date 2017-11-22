@@ -1,5 +1,6 @@
 #coding=gbk
 
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -130,7 +131,7 @@ class stockpredictlstm:
                                         feed_dict={X: train_x[batch_index[step]:batch_index[step + 1]],
                                                    Y: train_y[batch_index[step]:batch_index[step + 1]]})
                 print("Number of iterations:", i, " loss:", loss_)
-            print("model_save: ", saver.save(sess, 'model_save2\\modle.ckpt'))
+            print("model_save: ", saver.save(sess, 'model' + os.path.sep + 'modle.ckpt'))
             # 我是在window下跑的，这个地址是存放模型的地方，模型参数文件名为modle.ckpt
             # 在Linux下面用 'model_save2/modle.ckpt'
             print("The train has finished")
@@ -186,7 +187,7 @@ class stockpredictlstm:
             plt.show()
 
 if __name__ == '__main__':
-    predict = stockpredictlstm('train\\600118.csv')
+    predict = stockpredictlstm('train' + os.path.sep + '600118.csv')
     print(predict.datalen)
     predict.train_lstm(batch_size=60, time_step=20, train_begin=0, train_end=predict.datalen - 500)
     predict.prediction(time_step=20, test_begin=predict.datalen - 500)
