@@ -132,7 +132,7 @@ class stockdatamaker:
         """
         for fn in os.listdir(datadir):
             print(">{}".format(fn))
-            self.csv_to_dataset(datadir + "\\" + fn)
+            self.csv_to_dataset(datadir + os.path.sep + fn)
             print("    len:{}".format(len(maker.label_set)))
 
         self.label_set = np.array(self.label_set, dtype=np.uint8)

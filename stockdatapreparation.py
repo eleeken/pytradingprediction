@@ -34,7 +34,7 @@ class stockdatapreparation:
         :param fn:文件名
         :return:
         '''
-        df = pd.read_csv(datadir + '\\' + fn, skipinitialspace=True, skiprows=1, names=self.COLUMNS)
+        df = pd.read_csv(datadir + os.path.sep + fn, skipinitialspace=True, skiprows=1, names=self.COLUMNS)
         df = df.dropna(axis=0, how='any')
         df = df[(df['Adj Close'] != 0.0) & (df['Close'] != 0.0) & (df['Volume'] != 0)]
         df = df.reset_index(drop = True)
@@ -45,7 +45,7 @@ class stockdatapreparation:
 
         for i in range(len(df) - self.LABELDAYS_AHEAD, len(df)):
             df.drop(i)
-        df.to_csv(self.TRAINDIR + '\\' + fn, index=False, sep=',')
+        df.to_csv(self.TRAINDIR + os.path.sep + fn, index=False, sep=',')
 
     def prepare(self):
         """读取数据集
